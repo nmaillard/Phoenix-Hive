@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Apache Software Foundation
+Implementation-Title: Phoenix - Hive
+Implementation-Version: 4.2.0
+Implementation-Vendor-Id: org.apache.phoenix
+Specification-Vendor: Apache Software Foundation
+Build-Jdk: 1.7.0_71
+Built-By: nmaillard
+Created-By: Maven Integration for Eclipse
+Specification-Title: Phoenix - Hive
+Specification-Version: 4.2.0
+
