@@ -32,7 +32,30 @@ TBLPROPERTIES(
 );
 ```
 #### Explanation
-
+Table Type
+```
+tables can be External or normal.
+Normal: Hive manages the table and will try to create and delete it. If Table already exists it will result in an error
+External: Hive will try to map to an existing table. In case of Drop will only drop the Hive table definition not Phoenix data.
+autocreate: If Exteranl will still try to create it if it does not exist.
+autodrop: if External wil still try to drop in Phoenix as well
+An External table with autocreate and autodrop is a Normal/Managed table
+```
+TBLPROPERTIES
+Cluster Properties
+```
+phoenix.zookeeper.quorum: comma separated list of machines in zookeeper quorum [default: localhost]
+phoenix.zookeeper.znode.parent: znode for zookeeper [default: hbase]
+phoenix.zookeeper.client.port: zookeeper port [default: 2181]
+```
+Table Properties
+```
+phoenix.hbase.table.name : name of the table in phoenix (if not used will use the Hive tablename)
+phoenix.rowkeys = comma separated list of columns to be used in the row key [MANDATORY]
+phoenix.column.mapping = comma separated list of mappings from Hive columns to Hive columns
+saltbuckets = number of buckets to use for salting the table [ from 1-256]
+compression = if table should be compressed [null or gz]
+```
 
 ### Compile
 ============
