@@ -14,7 +14,8 @@ Add phoenix-hive-<version>.jar to `hive.aux.jars.path` or register it manually i
 ADD JAR /path_to_jar/phoenix-hive-<version>.jar;
 ```
 #### Writing Example
-To write data from Hive to Phoenix, define a table backed by the desired Phoenix table:
+To write data from Hive to Phoenix, you must define a table backed by the desired Phoenix table:
+here is an example
 ```SQL
 CREATE [EXTERNAL] TABLE phoenix (
     code      STRING,
@@ -30,6 +31,23 @@ TBLPROPERTIES(
     'autodrop'='true',
     'phoenix.column.mapping'='description:A.description,total_emp:B.total_emp,salary:B.salary'
 );
+```
+In this example we have defined a Hive tabel that stores directly in the corresponding phoenix
+```
+table.'phoenix.hbase.table.name'='sample_test'
+```
+Phoenix sits on top of Hbase and leverages Column families if you need it to. By default all columns will be added to a default columne family name 0
+Here we decide to precisily write our columns to specific column families for example 2 first columns to CF a and two next columns to CF B
+```
+'phoenix.column.mapping'='description:A.description,total_emp:B.total_emp,salary:B.salary'
+```
+Remember the rowkeys do not get written any column family.
+
+Loading
+```SQL
+INSERT OVERWRITE TABLE phoenix
+    select code,description,total_emp,salary
+    from sample_07;
 ```
 #### Explanation
 Table Type
