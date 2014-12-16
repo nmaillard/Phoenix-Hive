@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
@@ -37,6 +39,7 @@ import com.google.common.base.Preconditions;
  *
  */
 public class ConfigurationUtil {
+    static Log LOG = LogFactory.getLog(ConfigurationUtil.class.getName());
 
     public static final String TABLE_NAME = "phoenix.hbase.table.name";
     public static final String ZOOKEEPER_QUORUM = "phoenix.zookeeper.quorum";
@@ -61,15 +64,11 @@ public class ConfigurationUtil {
     public static final String MAP_SPECULATIVE_EXEC = "mapred.map.tasks.speculative.execution";
 
     public static void setProperties(Properties tblProps, Map<String, String> jobProperties) {
-        System.out.println("quorum:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_QUORUM));
-        System.out.println("port:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_PORT));
-        System.out.println("parent:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_PARENT));
-        System.out.println("table:" + tblProps.getProperty(ConfigurationUtil.TABLE_NAME));
-        System.out.println("batch:" + tblProps.getProperty(ConfigurationUtil.UPSERT_BATCH_SIZE));
-        for (Entry<Object, Object> e : tblProps.entrySet()) {
-            System.out.println("entry:" + e.getKey().toString() + " vlue "
-                    + e.getValue().toString());
-        }
+        LOG.debug("quorum:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_QUORUM));
+        LOG.debug("port:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_PORT));
+        LOG.debug("parent:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_PARENT));
+        LOG.debug("table:" + tblProps.getProperty(ConfigurationUtil.TABLE_NAME));
+        LOG.debug("batch:" + tblProps.getProperty(ConfigurationUtil.UPSERT_BATCH_SIZE));
         jobProperties.put(ConfigurationUtil.ZOOKEEPER_QUORUM, tblProps.getProperty(
             ConfigurationUtil.ZOOKEEPER_QUORUM, ConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT));
         jobProperties.put(ConfigurationUtil.ZOOKEEPER_PORT, tblProps.getProperty(
@@ -79,8 +78,6 @@ public class ConfigurationUtil {
         String tableName = tblProps.getProperty(ConfigurationUtil.TABLE_NAME);
         if (tableName == null) {
             tableName = tblProps.get("name").toString();
-            System.out.println("table name to string "+tableName);
-            System.out.println("table name to string size"+tableName.split(".").length);
             tableName = tableName.split(".")[1];
         }
         jobProperties.put(ConfigurationUtil.TABLE_NAME, tableName);
@@ -111,9 +108,6 @@ public class ConfigurationUtil {
      */
 
     public static PDataType hiveTypeToPDataType(TypeInfo hiveType) throws SerDeException {
-        System.out.println(" ConfigurstionUtil hiveTypeToPDataType");
-        System.out.println(" typeInfo name " + hiveType.getTypeName());
-        System.out.println("cat name " + hiveType.getCategory().name());
         switch (hiveType.getCategory()) {
         case PRIMITIVE:
             // return
@@ -126,7 +120,6 @@ public class ConfigurationUtil {
     }
 
     public static PDataType hiveTypeToPDataType(String hiveType) throws SerDeException {
-        System.out.println(" ConfigurstionUtil hiveTypeToPDataType");
         final String lctype = hiveType.toLowerCase();
         if ("string".equals(lctype)) {
             return PDataType.VARCHAR;

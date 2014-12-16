@@ -60,9 +60,6 @@ public class HiveTypeUtil {
 	 */
 	public static PDataType HiveType2PDataType(TypeInfo hiveType)
 			throws SerDeException {
-		System.out.println(" ConfigurstionUtil hiveTypeToPDataType");
-		System.out.println(" typeInfo name " + hiveType.getTypeName());
-		System.out.println("cat name " + hiveType.getCategory().name());
 		switch (hiveType.getCategory()) {
 		/* Integrate Complex types like Array */
 		case PRIMITIVE:
@@ -82,7 +79,6 @@ public class HiveTypeUtil {
 	 */
 	public static PDataType HiveType2PDataType(String hiveType)
 			throws SerDeException {
-		System.out.println(" ConfigurstionUtil hiveTypeToPDataType");
 		final String lctype = hiveType.toLowerCase();
 		if ("string".equals(lctype)) {
 			return PDataType.VARCHAR;

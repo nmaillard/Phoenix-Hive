@@ -133,13 +133,15 @@ public class PhoenixMetaHook implements HiveMetaHook {
                 }
             }
             /*If external table test if schemas coincide create only if autocreate*/
-            if (tbl.getTableType().equals(TableType.EXTERNAL_TABLE.name())){
+            else if (tbl.getTableType().equals(TableType.EXTERNAL_TABLE.name())){
                 if (PhoenixUtil.findTable(conn, tablename)) {
                     LOG.info("CREATE External table table already exists");
                     PhoenixUtil.testTable(conn, tablename, fields);
                 }else if (tbl.getParameters().get(ConfigurationUtil.AUTOCREATE) != null&& tbl.getParameters().get(ConfigurationUtil.AUTOCREATE).equalsIgnoreCase("true")){
                     PhoenixUtil.createTable(conn,tablename,fields, pk.split(","), false,salt_buckets,compression);
                 }
+            }else{
+                throw new MetaException(" Phoenix Unsupported table Type: " + tbl.getTableType());
             }
         } catch (SQLException e) {
             e.printStackTrace();

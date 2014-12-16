@@ -80,7 +80,6 @@ public class PhoenixInputFormat extends HiveInputFormat<NullWritable, PhoenixHiv
 
     @Override
     public InputSplit[] getSplits(JobConf jobConf, int chunks) throws IOException {
-        System.out.println("PhoenixInputFormat getting splits from phoenix import");
         if (!jobConfSet) {
             super.configure(jobConf);
             this.jobConfSet = true;

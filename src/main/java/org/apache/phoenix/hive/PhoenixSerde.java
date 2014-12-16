@@ -73,6 +73,8 @@ public class PhoenixSerde implements SerDe {
         columnTypes =
                 TypeInfoUtils.getTypeInfosFromTypeString(tblProps
                         .getProperty(HiveConstants.COLUMNS_TYPES));
+        LOG.debug("columnNames: "+columnNames);
+        LOG.debug("columnTypes: "+columnNames);
         this.fieldCount = columnTypes.size();
         PDataType[] types = HiveTypeUtil.hiveTypesToSqlTypes(columnTypes);
         phrecord = new PhoenixHiveDBWritable(types);
@@ -114,7 +116,8 @@ public class PhoenixSerde implements SerDe {
         } catch (Exception e) {
             throw new SerDeException();
         }*/
-        return null;
+        throw new SerDeException("The Read Path is not yet usable, To read please use the standard Phoenix client");
+        //return null;
     }
     
     /**
