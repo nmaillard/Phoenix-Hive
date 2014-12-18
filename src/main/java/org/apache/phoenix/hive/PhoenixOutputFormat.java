@@ -101,7 +101,6 @@ org.apache.hadoop.mapred.OutputFormat<NullWritable, T>{
      * @param columns
      */
     public static void setOutput(final Job job, final String tableName,final String columns) {
-    	LOG.debug("PhoenixOutputFormat setOutput with columns");
         job.setOutputFormatClass(PhoenixOutputFormat.class);
         final Configuration configuration = job.getConfiguration();
         PhoenixConfigurationUtil.setOutputTableName(configuration, tableName);
@@ -117,7 +116,6 @@ org.apache.hadoop.mapred.OutputFormat<NullWritable, T>{
      * @param fieldNames
      */
     public static void setOutput(final Job job, final String tableName , final String... fieldNames) {
-    	LOG.debug("PhoenixOutputFormat setOutput");
           job.setOutputFormatClass(PhoenixOutputFormat.class);
           final Configuration configuration = job.getConfiguration();
           PhoenixConfigurationUtil.setOutputTableName(configuration, tableName);
@@ -135,10 +133,8 @@ org.apache.hadoop.mapred.OutputFormat<NullWritable, T>{
 	public org.apache.hadoop.mapred.RecordWriter<NullWritable, T> getRecordWriter(
 			FileSystem fs, JobConf conf, String st, Progressable progress)
 			throws IOException {
-		LOG.debug("PhoenixOutputFormat org.apache.hadoop.mapred.RecordWriter");
 		try {
-		    LOG.info("JobConf"+conf.toString());
-		    LOG.info("JobConf table name"+conf.get(ConfigurationUtil.TABLE_NAME));		    
+		      
 			return new PhoenixRecordWriter<T>(
 					getConnection(conf), conf);
 		} catch (SQLException e) {

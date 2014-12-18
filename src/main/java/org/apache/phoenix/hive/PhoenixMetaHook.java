@@ -94,6 +94,7 @@ public class PhoenixMetaHook implements HiveMetaHook {
                     + ConfigurationUtil.PHOENIX_ROWKEYS);
         }
         
+        
         int salt_buckets = 0;
         String salting =  mps.get(ConfigurationUtil.SALT_BUCKETS);
         

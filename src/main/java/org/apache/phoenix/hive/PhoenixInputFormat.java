@@ -53,6 +53,7 @@ public class PhoenixInputFormat extends HiveInputFormat<NullWritable, PhoenixHiv
      * instantiated by framework
      */
     public PhoenixInputFormat() {
+        LOG.info("Phoenix InputF init");
     }
 
     @Override

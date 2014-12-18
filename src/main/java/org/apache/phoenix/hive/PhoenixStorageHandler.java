@@ -98,7 +98,9 @@ public class PhoenixStorageHandler extends DefaultStorageHandler implements
      */
     @Override
     public Class<? extends InputFormat> getInputFormatClass() {
+        System.out.println("Phoenix Read Path not fully functionnal yet, please use Phoenix standard client");
         return PhoenixInputFormat.class;
+        //return null;
     }
 
     /**

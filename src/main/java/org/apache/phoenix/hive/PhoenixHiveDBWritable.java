@@ -39,7 +39,6 @@ public class PhoenixHiveDBWritable implements Writable,DBWritable {
 	private static final Log LOG = LogFactory.getLog(PhoenixHiveDBWritable.class);
 	
 	private final List<Object> values = new ArrayList<Object>();
-    private List<ColumnInfo> columnMetadataList;
     private PDataType[] PDataTypes = null;
 
 	

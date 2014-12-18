@@ -22,11 +22,19 @@ public class PhoenixUtil {
     static Log LOG = LogFactory.getLog(PhoenixUtil.class.getName());
     
     public static boolean createTable(Connection conn,String TableName,Map<String, String> fields, String[] pks, boolean addIfNotExists,int salt_buckets,String compression)
-            throws SQLException {
+            throws SQLException, MetaException {
         Preconditions.checkNotNull(conn);
         if (pks == null || pks.length == 0) {
             throw new SQLException("Phoenix Table no Rowkeys specified in "
                     + ConfigurationUtil.PHOENIX_ROWKEYS);
+        }
+        for(String pk:pks){
+            String val = fields.get(pk.toLowerCase());
+            if(val==null){
+                throw new MetaException("Phoenix Table rowkey "+pk+" does not belong to listed fields ");
+            }
+            val +=" not null";
+            fields.put(pk, val);
         }
         
         StringBuffer query = new StringBuffer("CREATE TABLE ");

@@ -57,18 +57,23 @@ public final class ConnectionUtil {
         final Properties props = new Properties();
         String quorum = configuration.get(ConfigurationUtil.ZOOKEEPER_QUORUM!=null?ConfigurationUtil.ZOOKEEPER_QUORUM:configuration.get(HConstants.ZOOKEEPER_QUORUM));
         String znode = configuration.get(ConfigurationUtil.ZOOKEEPER_PARENT!=null?ConfigurationUtil.ZOOKEEPER_PARENT:configuration.get(HConstants.ZOOKEEPER_ZNODE_PARENT));
-        String port = configuration.get(ConfigurationUtil.ZOOKEEPER_PORT!=null?ConfigurationUtil.ZOOKEEPER_PARENT:configuration.get(HConstants.ZOOKEEPER_CLIENT_PORT));
+        String port = configuration.get(ConfigurationUtil.ZOOKEEPER_PORT!=null?ConfigurationUtil.ZOOKEEPER_PORT:configuration.get(HConstants.ZOOKEEPER_CLIENT_PORT));
         if (!znode.startsWith("/")) {
         	znode = "/" + znode;
         }
         
         try {
             Class.forName("org.apache.phoenix.jdbc.PhoenixDriver");
-            final Connection conn =
-                    DriverManager.getConnection((PhoenixRuntime.JDBC_PROTOCOL
+            LOG.info("Connection info: "+PhoenixRuntime.JDBC_PROTOCOL
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + quorum
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + port
-                            + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + znode));
+                            + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + znode);
+            
+            final Connection conn =
+                    DriverManager.getConnection(PhoenixRuntime.JDBC_PROTOCOL
+                            + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + quorum
+                            + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + port
+                            + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + znode);
             String autocommit = configuration.get(ConfigurationUtil.AUTOCOMMIT);
             if(autocommit!=null && autocommit.equalsIgnoreCase("true")){
                 conn.setAutoCommit(true);
