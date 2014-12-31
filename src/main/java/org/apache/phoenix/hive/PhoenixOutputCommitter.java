@@ -38,7 +38,6 @@ import org.apache.phoenix.jdbc.PhoenixStatement;
 public class PhoenixOutputCommitter  extends OutputCommitter {
     public final Log LOG = LogFactory.getLog(PhoenixOutputCommitter.class);
     
-    //private final PhoenixOutputFormat outputFormat;
     
     public PhoenixOutputCommitter(PhoenixOutputFormat outputFormat) {
        /* if(outputFormat == null) {
@@ -47,6 +46,7 @@ public class PhoenixOutputCommitter  extends OutputCommitter {
         this.outputFormat = outputFormat;*/
     }
 
+    
     /**
      *  TODO implement rollback functionality. 
      *  

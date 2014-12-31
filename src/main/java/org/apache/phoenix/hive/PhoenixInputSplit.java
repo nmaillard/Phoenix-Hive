@@ -44,6 +44,7 @@ public class PhoenixInputSplit  extends InputSplit implements Writable {
     public PhoenixInputSplit() {
     }
     
+    
    /**
     * 
     * @param keyRange

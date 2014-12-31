@@ -56,8 +56,6 @@ public class PhoenixSerde implements SerDe {
     private ObjectInspector ObjectInspector;
     private int fieldCount;
     private List<Object> row;
-
-
     private List<ObjectInspector> fieldOIs;
     
     /**

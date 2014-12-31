@@ -65,6 +65,7 @@ public class PhoenixRecordReader<T extends PhoenixHiveDBWritable> extends Record
         this.queryPlan = queryPlan;
     }
 
+    
     @Override
     public void close() throws IOException {
         if(resultIterator != null) {

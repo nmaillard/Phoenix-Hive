@@ -122,7 +122,6 @@ org.apache.hadoop.mapred.OutputFormat<NullWritable, T>{
           PhoenixConfigurationUtil.setUpsertColumnNames(configuration,fieldNames);
     }
 
-    
 	public void checkOutputSpecs(FileSystem arg0, JobConf arg1)
 			throws IOException {
 		LOG.debug("PhoenixOutputFormat checkOutputSpecs");

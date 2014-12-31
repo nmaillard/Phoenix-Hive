@@ -53,7 +53,6 @@ public class PhoenixMetaHook implements HiveMetaHook {
      * anaged tables are always created through Hive, External tables need to check for prexisiting table and schemas
      * @param tbl all table properties
      */
-
     public void commitCreateTable(Table tbl) throws MetaException {
         LOG.debug("PhoenixMetaHook commitCreateTable ");
         Map<String, String> fields = new LinkedHashMap<String, String>();
@@ -93,7 +92,6 @@ public class PhoenixMetaHook implements HiveMetaHook {
             throw new MetaException("Phoenix Table no Rowkeys specified in "
                     + ConfigurationUtil.PHOENIX_ROWKEYS);
         }
-        
         
         int salt_buckets = 0;
         String salting =  mps.get(ConfigurationUtil.SALT_BUCKETS);

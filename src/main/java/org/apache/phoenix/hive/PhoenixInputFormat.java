@@ -46,7 +46,6 @@ public class PhoenixInputFormat extends HiveInputFormat<NullWritable, PhoenixHiv
     private PhoenixHiveConfiguration phoenixConfiguration;
     private Connection connection;
     private QueryPlan queryPlan;
-
     private boolean jobConfSet = false;
 
     /**

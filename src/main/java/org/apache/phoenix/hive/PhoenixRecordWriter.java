@@ -51,7 +51,6 @@ public class PhoenixRecordWriter<T extends DBWritable> implements RecordWriter<N
         this.statement = this.conn.prepareStatement(upsertQuery);
     }
 
-
     public void write(NullWritable n, T record) throws IOException {      
     	LOG.info("PhoenixRecordWriter write ");
         try {

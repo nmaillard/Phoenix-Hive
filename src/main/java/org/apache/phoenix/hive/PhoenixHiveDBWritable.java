@@ -41,7 +41,6 @@ public class PhoenixHiveDBWritable implements Writable,DBWritable {
 	private final List<Object> values = new ArrayList<Object>();
     private PDataType[] PDataTypes = null;
 
-	
 	public PhoenixHiveDBWritable(){
 		LOG.debug("PhoenixHiveDBWritable construt");
 	}
