@@ -40,9 +40,9 @@ TBLPROPERTIES(
     'phoenix.column.mapping'='description:A.description,total:B.total,salary:B.salary'
 );
 ```
-In this example we have defined a Hive tabel that stores directly in the corresponding phoenix
+In this example we have defined a Hive table that stores directly in the corresponding phoenix table
 ```
-table.'phoenix.hbase.table.name'='sample_test'
+'phoenix.hbase.table.name'='phoenix_table'
 ```
 Phoenix sits on top of Hbase and leverages Column families if you need it to. By default all columns will be added to a default columne family name 0
 Here we decide to precisily write our columns to specific column families for example 2 first columns to CF a and two next columns to CF B
