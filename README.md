@@ -1,14 +1,14 @@
 #Phoenix-Hive
 ## Hive StorageHandler for Phoenix 
 ============
-This is a work in progress for a Hive Phoenix connector.
+This is a work in progress for a Hive PhoenixStorageHandler.
 In an ETL workflow id often makes a lot of sense to clean and specialize your data for low latency application needs. In the same way your raw data would move to common data in ORC file format, your application data could end in a Phoenix table for very low latency and concurrent access. This project aims to make this last step as easy and transparent as an INSERT INTO by providing a simple StorageHandler from Hive to Phoenix
 
 ### Limitations
 ============
-.Currently only works with MapReduce as execution engine (P1)
-.Currently only supports Hive Primitive types, essentially missing Array Type for Phoenix (P0)
-.Currently very limited predicate pushdown will get better in next version (P0)
+*Currently only works with MapReduce as execution engine (P1)
+*Currently only supports Hive Primitive types, essentially missing Array Type for Phoenix (P0)
+*Currently very limited predicate pushdown will get better in next version (P0)
 
 ### Usage
 ============
