@@ -60,12 +60,12 @@ INSERT INTO TABLE phoenix_table
 #### Explanation
 Table Type
 ```
-tables can be External or normal.
-Normal: Hive manages the table and will try to create and delete it. If Table already exists it will result in an error
+tables can be External or Managed.
+Managed: Hive manages the table and will try to create and delete it. If Table already exists it will result in an error
 External: Hive will try to map to an existing table. In case of Drop will only drop the Hive table definition not Phoenix data.
-autocreate: If Exteranl will still try to create it if it does not exist.
-autodrop: if External wil still try to drop in Phoenix as well
-An External table with autocreate and autodrop is a Normal/Managed table
+- autocreate: If Exteranl will still try to create it if it does not exist.
+- autodrop: if External wil still try to drop in Phoenix as well
+An External table with autocreate and autodrop set is a Managed table
 ```
 TBLPROPERTIES
 Cluster Properties
