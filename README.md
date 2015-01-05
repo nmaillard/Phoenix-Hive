@@ -93,6 +93,7 @@ Select id,count(*) from phoenix_table group by id
 ##### Joining Phoenix data and other Hive data
 ```SQL
 select * from phoenix_table pt,sample_07 s where pt.code=s.code
+select pt.id,s.code,pt.salary,s.salary from phoenix_table pt,sample_07 s where pt.code=s.code and s.salary>33000;
 ```
 
 ### Compile
