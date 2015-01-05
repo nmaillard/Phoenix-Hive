@@ -54,7 +54,7 @@ Remember the rowkeys do not get written any column family.
 ##### Loading
 ```SQL
 INSERT INTO TABLE phoenix_table
-    select split(code, ‘-‘)[1],code,description,total_emp,salary
+    select split(code, '-')[1],code,description,total_emp,salary
     FROM sample_07;
 ```
 #### Explanation
@@ -85,7 +85,9 @@ saltbuckets = number of buckets to use for salting the table [ from 1-256]
 To read data from Phoenix through Hive interface works like any other Hive select query:
 ```SQL
 Select * from phoenix_table
+Select code,description from phoenix_table
 Select count(*) from phoenix_table
+Select id,count(*) from phoenix_table group by id
 
 ```
 ### Compile
