@@ -1,5 +1,5 @@
 #Phoenix-Hive
-## Hive StorageHandler for Phoenix 
+## PhoenixStorageHandler for Hive 
 ============
 This is a work in progress for a Hive PhoenixStorageHandler.
 In an ETL workflow id often makes a lot of sense to clean and specialize your data for low latency application needs. In the same way your raw data would move to common data in ORC file format, your application data could end in a Phoenix table for very low latency and concurrent access. This project aims to make this last step as easy and transparent as an INSERT INTO by providing a simple StorageHandler from Hive to Phoenix
