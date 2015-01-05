@@ -1,104 +1,85 @@
-/*
- * Copyright 2010 The Apache Software Foundation
- *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- *distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you maynot use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicablelaw or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.apache.phoenix.hive;
+
+import com.google.common.base.Preconditions;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.FileSplit;
 import org.apache.phoenix.query.KeyRange;
 
-import com.google.common.base.Preconditions;
-
-/**
- * Describe your class here.
- *
- * @since 138
- */
-public class PhoenixInputSplit  extends InputSplit implements Writable {
-
+public class PhoenixInputSplit extends FileSplit {
+    private static final Log LOG = LogFactory.getLog(PhoenixInputFormat.class);
     private KeyRange keyRange;
-   
-    /**
-     * No Arg constructor
-     */
+    private Path path;
+
     public PhoenixInputSplit() {
+        super((Path) null, 0, 0, (String[]) null);
     }
-    
-    
-   /**
-    * 
-    * @param keyRange
-    */
-    public PhoenixInputSplit(final KeyRange keyRange) {
+
+    public PhoenixInputSplit(KeyRange keyRange) {
         Preconditions.checkNotNull(keyRange);
         this.keyRange = keyRange;
     }
 
+    public PhoenixInputSplit(KeyRange keyRange, Path path) {
+        Preconditions.checkNotNull(keyRange);
+        Preconditions.checkNotNull(path);
+        LOG.debug("path: " + path);
+
+        this.keyRange = keyRange;
+        this.path = path;
+    }
+
     public void readFields(DataInput input) throws IOException {
-        this.keyRange = new KeyRange ();
+        this.path = new Path(Text.readString(input));
+        this.keyRange = new KeyRange();
         this.keyRange.readFields(input);
     }
 
     public void write(DataOutput output) throws IOException {
-        Preconditions.checkNotNull(keyRange);
-        keyRange.write(output);
+        Preconditions.checkNotNull(this.keyRange);
+        Text.writeString(output, path.toString());
+        this.keyRange.write(output);
     }
 
-    @Override
-    public long getLength() throws IOException, InterruptedException {
-         return 0;
+    public long getLength() {
+        return 0L;
     }
 
-    @Override
-    public String[] getLocations() throws IOException, InterruptedException {
-        return new String[]{};
+    public String[] getLocations() {
+        return new String[0];
     }
 
-    /**
-     * @return Returns the keyRange.
-     */
     public KeyRange getKeyRange() {
-        return keyRange;
+        return this.keyRange;
     }
 
     @Override
+    public Path getPath() {
+        return this.path;
+    }
+
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = 1;
-        result = prime * result + ((keyRange == null) ? 0 : keyRange.hashCode());
+        result = 31 * result + (this.keyRange == null ? 0 : this.keyRange.hashCode());
         return result;
     }
 
-    @Override
     public boolean equals(Object obj) {
-        if (this == obj) { return true; }
-        if (obj == null) { return false; }
-        if (!(obj instanceof PhoenixInputSplit)) { return false; }
-        PhoenixInputSplit other = (PhoenixInputSplit)obj;
-        if (keyRange == null) {
-            if (other.keyRange != null) { return false; }
-        } else if (!keyRange.equals(other.keyRange)) { return false; }
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof PhoenixInputSplit)) return false;
+        PhoenixInputSplit other = (PhoenixInputSplit) obj;
+        if (this.keyRange == null) {
+            if (other.keyRange != null) return false;
+        } else if (!this.keyRange.equals(other.keyRange)) return false;
         return true;
     }
-
 }

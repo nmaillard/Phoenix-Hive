@@ -1,19 +1,12 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable
+ * law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ * for the specific language governing permissions and limitations under the License.
  */
 package org.apache.phoenix.hive.util;
 
@@ -38,8 +31,8 @@ import com.google.common.base.Preconditions;
 /**
  *
  */
-public class ConfigurationUtil {
-    static Log LOG = LogFactory.getLog(ConfigurationUtil.class.getName());
+public class HiveConfigurationUtil {
+    static Log LOG = LogFactory.getLog(HiveConfigurationUtil.class.getName());
 
     public static final String TABLE_NAME = "phoenix.hbase.table.name";
     public static final String ZOOKEEPER_QUORUM = "phoenix.zookeeper.quorum";
@@ -64,25 +57,31 @@ public class ConfigurationUtil {
     public static final String MAP_SPECULATIVE_EXEC = "mapred.map.tasks.speculative.execution";
 
     public static void setProperties(Properties tblProps, Map<String, String> jobProperties) {
-        LOG.debug("quorum:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_QUORUM));
-        LOG.debug("port:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_PORT));
-        LOG.debug("parent:" + tblProps.getProperty(ConfigurationUtil.ZOOKEEPER_PARENT));
-        LOG.debug("table:" + tblProps.getProperty(ConfigurationUtil.TABLE_NAME));
-        LOG.debug("batch:" + tblProps.getProperty(ConfigurationUtil.UPSERT_BATCH_SIZE));
-        jobProperties.put(ConfigurationUtil.ZOOKEEPER_QUORUM, tblProps.getProperty(
-            ConfigurationUtil.ZOOKEEPER_QUORUM, ConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT));
-        jobProperties.put(ConfigurationUtil.ZOOKEEPER_PORT, tblProps.getProperty(
-            ConfigurationUtil.ZOOKEEPER_PORT, ConfigurationUtil.ZOOKEEPER_PORT_DEFAULT));
-        jobProperties.put(ConfigurationUtil.ZOOKEEPER_PARENT, tblProps.getProperty(
-            ConfigurationUtil.ZOOKEEPER_PARENT, ConfigurationUtil.ZOOKEEPER_PARENT_DEFAULT));
-        String tableName = tblProps.getProperty(ConfigurationUtil.TABLE_NAME);
+        LOG.debug("quorum:" + tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_QUORUM));
+        LOG.debug("port:" + tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PORT));
+        LOG.debug("parent:" + tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PARENT));
+        LOG.debug("table:" + tblProps.getProperty(HiveConfigurationUtil.TABLE_NAME));
+        LOG.debug("batch:" + tblProps.getProperty(HiveConfigurationUtil.UPSERT_BATCH_SIZE));
+        jobProperties
+                .put(HiveConfigurationUtil.ZOOKEEPER_QUORUM, tblProps.getProperty(
+                    HiveConfigurationUtil.ZOOKEEPER_QUORUM,
+                    HiveConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT));
+        jobProperties.put(HiveConfigurationUtil.ZOOKEEPER_PORT, tblProps.getProperty(
+            HiveConfigurationUtil.ZOOKEEPER_PORT, HiveConfigurationUtil.ZOOKEEPER_PORT_DEFAULT));
+        jobProperties
+                .put(HiveConfigurationUtil.ZOOKEEPER_PARENT, tblProps.getProperty(
+                    HiveConfigurationUtil.ZOOKEEPER_PARENT,
+                    HiveConfigurationUtil.ZOOKEEPER_PARENT_DEFAULT));
+        String tableName = tblProps.getProperty(HiveConfigurationUtil.TABLE_NAME);
         if (tableName == null) {
             tableName = tblProps.get("name").toString();
             tableName = tableName.split(".")[1];
         }
-        jobProperties.put(ConfigurationUtil.TABLE_NAME, tableName);
+        jobProperties.put(HiveConfigurationUtil.TABLE_NAME, tableName);
+        // TODO this is synch with common Phoenix mechanism revisit to make wiser decisions
+        jobProperties.put(PhoenixConfigurationUtil.OUTPUT_TABLE_NAME, tableName);
+        jobProperties.put(PhoenixConfigurationUtil.INPUT_TABLE_NAME, tableName);
     }
-    
 
     public static PDataType[] hiveTypesToPDataType(
             PrimitiveObjectInspector.PrimitiveCategory[] hiveTypes) throws SerDeException {
@@ -197,7 +196,6 @@ public class ConfigurationUtil {
         }
         return null;
     }
-    
 
     /**
      * This method encodes a value with Phoenix data type. It begins with checking whether an object

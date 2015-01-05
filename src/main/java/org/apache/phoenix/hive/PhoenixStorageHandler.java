@@ -41,7 +41,7 @@ import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.mapred.InputFormat;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputFormat;
-import org.apache.phoenix.hive.util.ConfigurationUtil;
+import org.apache.phoenix.hive.util.HiveConfigurationUtil;
 
 public class PhoenixStorageHandler extends DefaultStorageHandler implements
         HiveStoragePredicateHandler {
@@ -86,21 +86,25 @@ public class PhoenixStorageHandler extends DefaultStorageHandler implements
     /**
      * Extract all job properties to configure this job 
      * parameter tableDesc tabledescription, jobProperties
+     * TODO this avoids any pushdown must revisit
      */
-    private void configureJobProperties(TableDesc tableDesc, Map<String, String> jobProperties) {
-        Properties tblProps = tableDesc.getProperties();
-        tblProps.getProperty(ConfigurationUtil.TABLE_NAME);
-        ConfigurationUtil.setProperties(tblProps, jobProperties);
+    private void configureJobProperties(TableDesc tableDesc, Map<String, String> jobProperties)
+    {
+      Properties tblProps = tableDesc.getProperties();
+      tblProps.getProperty("phoenix.hbase.table.name");
+      HiveConfigurationUtil.setProperties(tblProps, jobProperties);
+
+      //TODO this avoids any pushdown must revisit and extract meaningful parts
+      jobProperties.put("phoenix.select.stmt", "select * from " + (String)jobProperties.get("phoenix.hbase.table.name"));
+      LOG.debug("ConfigurationUtil.SELECT_STATEMENT " + (String)jobProperties.get("phoenix.select.stmt"));
     }
-  
+    
     /**
      * Getter for the class serializing data from Phoenix to Hive 
      */
     @Override
     public Class<? extends InputFormat> getInputFormatClass() {
-        System.out.println("Phoenix Read Path not fully functionnal yet, please use Phoenix standard client");
         return PhoenixInputFormat.class;
-        //return null;
     }
 
     /**
@@ -125,37 +129,8 @@ public class PhoenixStorageHandler extends DefaultStorageHandler implements
      */
     public DecomposedPredicate decomposePredicate(JobConf jobConf, Deserializer arg1,
             ExprNodeDesc exprn) {
-        System.out.println("******* decomposePredicate ******");
-        System.out.println(" ExprNodeDesc name: " + exprn.getName()
-                + " -ExprNodeDesc expr string:  " + exprn.getExprString() + " -type string:  "
-                + exprn.getTypeString() + " -type infio: " + exprn.getTypeInfo().toString());
-        for (String col : exprn.getCols()) {
-            System.out.println("Column: " + col);
-        }
-        for (ExprNodeDesc e : exprn.getChildren()) {
-            System.out.println("child name: " + e.getName() + " string " + e.getExprString());
-        }
-        System.out.println(" arg1 " + arg1.toString());
-        String query = jobConf.get("hive.query.string");
-        String wk = jobConf.get("mapreduce.workflow.name");
-        Iterator it = jobConf.iterator();
-        while(it.hasNext()){
-            Entry<String,String> et = (Entry<String,String>)it.next();
-            if(et.getValue().contains("host")){
-                System.out.println(" key " + et.getKey());
-                System.out.println(" jobconfkey " + jobConf.get(et.getKey()));
-            }
-        }
-        System.out.println(" query " + query);
-        System.out.println(" wk " + wk);
-        System.out.println(" Deserializer " + arg1.toString());
-        /*try {
-            //PhoenixTable.getInstance(jobConf).setPredicate(exprn.getExprString());
-            //PhoenixTable.getInstance(jobConf).getAll();
-        } catch (SQLException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }*/
+        
+        //TODO revisit the whole logic some information is not consistent
         return null;
     }
 

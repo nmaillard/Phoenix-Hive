@@ -33,7 +33,7 @@ import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.phoenix.util.PhoenixRuntime;
 import org.apache.phoenix.util.QueryUtil;
 import org.apache.phoenix.hive.PhoenixOutputFormat;
-import org.apache.phoenix.hive.util.ConfigurationUtil;
+import org.apache.phoenix.hive.util.HiveConfigurationUtil;
 
 import com.google.common.base.Preconditions;
 
@@ -55,16 +55,18 @@ public final class ConnectionUtil {
         LOG.info("Connection getConnection...");
         Preconditions.checkNotNull(configuration);
         final Properties props = new Properties();
-        String quorum = configuration.get(ConfigurationUtil.ZOOKEEPER_QUORUM!=null?ConfigurationUtil.ZOOKEEPER_QUORUM:configuration.get(HConstants.ZOOKEEPER_QUORUM));
-        String znode = configuration.get(ConfigurationUtil.ZOOKEEPER_PARENT!=null?ConfigurationUtil.ZOOKEEPER_PARENT:configuration.get(HConstants.ZOOKEEPER_ZNODE_PARENT));
-        String port = configuration.get(ConfigurationUtil.ZOOKEEPER_PORT!=null?ConfigurationUtil.ZOOKEEPER_PORT:configuration.get(HConstants.ZOOKEEPER_CLIENT_PORT));
+        String quorum = configuration.get(HiveConfigurationUtil.ZOOKEEPER_QUORUM!=null?HiveConfigurationUtil.ZOOKEEPER_QUORUM:configuration.get(HConstants.ZOOKEEPER_QUORUM));
+        String znode = configuration.get(HiveConfigurationUtil.ZOOKEEPER_PARENT!=null?HiveConfigurationUtil.ZOOKEEPER_PARENT:configuration.get(HConstants.ZOOKEEPER_ZNODE_PARENT));
+        String port = configuration.get(HiveConfigurationUtil.ZOOKEEPER_PORT!=null?HiveConfigurationUtil.ZOOKEEPER_PORT:configuration.get(HConstants.ZOOKEEPER_CLIENT_PORT));
         if (!znode.startsWith("/")) {
         	znode = "/" + znode;
         }
         
         try {
+            //Not necessary shoud pick it up 
             Class.forName("org.apache.phoenix.jdbc.PhoenixDriver");
-            LOG.info("Connection info: "+PhoenixRuntime.JDBC_PROTOCOL
+            
+            LOG.debug("Connection info: "+PhoenixRuntime.JDBC_PROTOCOL
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + quorum
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + port
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + znode);
@@ -74,7 +76,7 @@ public final class ConnectionUtil {
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + quorum
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + port
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + znode);
-            String autocommit = configuration.get(ConfigurationUtil.AUTOCOMMIT);
+            String autocommit = configuration.get(HiveConfigurationUtil.AUTOCOMMIT);
             if(autocommit!=null && autocommit.equalsIgnoreCase("true")){
                 conn.setAutoCommit(true);
             }else{
@@ -94,22 +96,22 @@ public final class ConnectionUtil {
      * @return
      * @throws SQLException
      */
-    
+    //TODO redundant
     public static Connection getConnection(final Table tbl) throws SQLException {
         Preconditions.checkNotNull(tbl);
         Map<String, String> TblParams = tbl.getParameters();
         String quorum =
-                TblParams.get(ConfigurationUtil.ZOOKEEPER_QUORUM) != null ? TblParams.get(
-                    ConfigurationUtil.ZOOKEEPER_QUORUM).trim()
-                        : ConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT;
+                TblParams.get(HiveConfigurationUtil.ZOOKEEPER_QUORUM) != null ? TblParams.get(
+                    HiveConfigurationUtil.ZOOKEEPER_QUORUM).trim()
+                        : HiveConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT;
         String port =
-                TblParams.get(ConfigurationUtil.ZOOKEEPER_PORT) != null ? TblParams.get(
-                    ConfigurationUtil.ZOOKEEPER_PORT).trim()
-                        : ConfigurationUtil.ZOOKEEPER_PORT_DEFAULT;
+                TblParams.get(HiveConfigurationUtil.ZOOKEEPER_PORT) != null ? TblParams.get(
+                    HiveConfigurationUtil.ZOOKEEPER_PORT).trim()
+                        : HiveConfigurationUtil.ZOOKEEPER_PORT_DEFAULT;
         String znode =
-                TblParams.get(ConfigurationUtil.ZOOKEEPER_PARENT) != null ? TblParams.get(
-                    ConfigurationUtil.ZOOKEEPER_PARENT).trim()
-                        : ConfigurationUtil.ZOOKEEPER_PARENT_DEFAULT;
+                TblParams.get(HiveConfigurationUtil.ZOOKEEPER_PARENT) != null ? TblParams.get(
+                    HiveConfigurationUtil.ZOOKEEPER_PARENT).trim()
+                        : HiveConfigurationUtil.ZOOKEEPER_PARENT_DEFAULT;
         if (!znode.startsWith("/")) {
         	znode = "/" + znode;
         }
@@ -120,7 +122,7 @@ public final class ConnectionUtil {
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + quorum
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + port
                             + PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR + znode));
-            String autocommit = TblParams.get(ConfigurationUtil.AUTOCOMMIT);
+            String autocommit = TblParams.get(HiveConfigurationUtil.AUTOCOMMIT);
             if(autocommit!=null && autocommit.equalsIgnoreCase("true")){
                 conn.setAutoCommit(true);
             }else{
