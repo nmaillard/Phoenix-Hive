@@ -24,7 +24,7 @@ To write data from Hive to Phoenix, you must define a table backed by the desire
 here is an example
 ##### Creating table
 ```SQL
-CREATE [EXTERNAL] TABLE phoenix_table( 
+CREATE EXTERNAL TABLE phoenix_table( 
 	ID int,
 	code STRING,
 	description STRING,
@@ -32,7 +32,7 @@ CREATE [EXTERNAL] TABLE phoenix_table(
 	SALARY INT)
 STORED BY  "org.apache.phoenix.hive.PhoenixStorageHandler"
 TBLPROPERTIES(
-    'phoenix.hbase.table.name'='phoenix_tabe',
+    'phoenix.hbase.table.name'='phoenix_table',
     'phoenix.zookeeper.znode.parent'='hbase-unsecure',
     'phoenix.rowkeys'='id,code',
     'autocreate'='true',
@@ -76,11 +76,10 @@ phoenix.zookeeper.client.port: zookeeper port [default: 2181]
 ```
 Table Properties
 ```
-phoenix.hbase.table.name : name of the table in phoenix (if not used will use the Hive tablename)
+phoenix.hbase.table.name : name of the table in phoenix [default: name of hive table]
 phoenix.rowkeys = comma separated list of columns to be used in the row key [MANDATORY]
-phoenix.column.mapping = comma separated list of mappings from Hive columns to Hive columns
+phoenix.column.mapping = comma separated list of mappings from Hive columns to Hive columns [default: hive cols names]
 saltbuckets = number of buckets to use for salting the table [ from 1-256]
-compression = if table should be compressed [null or gz]
 ```
 #### Reading Example
 To read data from Phoenix through Hive interface works like any other Hive select query:
