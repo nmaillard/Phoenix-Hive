@@ -83,13 +83,19 @@ saltbuckets = number of buckets to use for salting the table [ from 1-256]
 ```
 #### Reading Example
 To read data from Phoenix through Hive interface works like any other Hive select query:
+##### Reporting query
 ```SQL
 Select * from phoenix_table
 Select code,description from phoenix_table
 Select count(*) from phoenix_table
 Select id,count(*) from phoenix_table group by id
-
+select * from phoenix_table pt,sample_07 s where pt.code=s.code
 ```
+##### Joining Phoenix data and other Hive data
+```SQL
+select * from phoenix_table pt,sample_07 s where pt.code=s.code
+```
+
 ### Compile
 ============
 To compile the project 
