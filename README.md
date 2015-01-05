@@ -4,10 +4,16 @@
 This is a work in progress for a Hive Phoenix connector.
 In an ETL workflow id often makes a lot of sense to clean and specialize your data for low latency application needs. In the same way your raw data would move to common data in ORC file format, your application data could end in a Phoenix table for very low latency and concurrent access. This project aims to make this last step as easy and transparent as an INSERT INTO by providing a simple StorageHandler from Hive to Phoenix
 
+### Limitations
+============
+Currently only works with MapReduce as execution engine (P1)
+Currently only supports Hive Primitive types, essentially missing Array Type for Phoenix (P0)
+Currently very limited predicate pushdown will get better in next version (P0)
+
 ### Usage
 ============
 
-#### [Apache Hive - 13 and Above/ Apache Phoenix 4.2 and above][]
+#### [Apache Hive - 13 and Above/ Apache Phoenix 4.2 and above]
 
 Add phoenix-hive-<version>.jar to `hive.aux.jars.path` or register it manually in your Hive script (recommended):
 ```
@@ -16,20 +22,22 @@ ADD JAR /path_to_jar/phoenix-hive-<version>.jar;
 #### Writing Example
 To write data from Hive to Phoenix, you must define a table backed by the desired Phoenix table:
 here is an example
+##### Creating table
 ```SQL
-CREATE [EXTERNAL] TABLE phoenix (
-    code      STRING,
-    description    STRING,
-    total_emp INTEGER,
-    salary INTEGER,
+CREATE [EXTERNAL] TABLE phoenix_table( 
+	ID int,
+	code STRING,
+	description STRING,
+	total INT,
+	SALARY INT)
 STORED BY  "org.apache.phoenix.hive.PhoenixStorageHandler"
 TBLPROPERTIES(
-    'phoenix.hbase.table.name'='sample_test',
+    'phoenix.hbase.table.name'='phoenix_tabe',
     'phoenix.zookeeper.znode.parent'='hbase-unsecure',
-    'phoenix.rowkeys'='code',
+    'phoenix.rowkeys'='id,code',
     'autocreate'='true',
     'autodrop'='true',
-    'phoenix.column.mapping'='description:A.description,total_emp:B.total_emp,salary:B.salary'
+    'phoenix.column.mapping'='description:A.description,total:B.total,salary:B.salary'
 );
 ```
 In this example we have defined a Hive tabel that stores directly in the corresponding phoenix
@@ -43,11 +51,11 @@ Here we decide to precisily write our columns to specific column families for ex
 ```
 Remember the rowkeys do not get written any column family.
 
-Loading
+##### Loading
 ```SQL
-INSERT OVERWRITE TABLE phoenix
-    select code,description,total_emp,salary
-    from sample_07;
+INSERT INTO TABLE phoenix_table
+    select split(code, ‘-‘)[1],code,description,total_emp,salary
+    FROM sample_07;
 ```
 #### Explanation
 Table Type
@@ -74,8 +82,14 @@ phoenix.column.mapping = comma separated list of mappings from Hive columns to H
 saltbuckets = number of buckets to use for salting the table [ from 1-256]
 compression = if table should be compressed [null or gz]
 ```
+#### Reading Example
+To read data from Phoenix through Hive interface works like any other Hive select query:
+```SQL
+Select * from phoenix_table
+Select count(*) from phoenix_table
 
+```
 ### Compile
 ============
 To compile the project 
-mvn package -Dhadoop.profile=2
+mvn package -Dhadoop.profile=2 
