@@ -89,7 +89,6 @@ Select * from phoenix_table
 Select code,description from phoenix_table
 Select count(*) from phoenix_table
 Select id,count(*) from phoenix_table group by id
-select * from phoenix_table pt,sample_07 s where pt.code=s.code
 ```
 ##### Joining Phoenix data and other Hive data
 ```SQL
