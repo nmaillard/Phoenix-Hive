@@ -55,6 +55,10 @@ Remember the rowkeys do not get written any column family.
 ##### Loading
 ```SQL
 INSERT INTO TABLE phoenix_table
+    select 10,code,description,total_emp,salary
+    FROM sample_07;
+    
+INSERT INTO TABLE phoenix_table
     select split(code, '-')[1],code,description,total_emp,salary
     FROM sample_07;
 ```
