@@ -6,9 +6,9 @@ In an ETL workflow id often makes a lot of sense to clean and specialize your da
 
 ### Limitations
 ============
-..*Currently only works with MapReduce as execution engine (P1)
-..*Currently only supports Hive Primitive types, essentially missing Array Type for Phoenix (P0)
-..*Currently very limited predicate pushdown will get better in next version (P0)
+..* Currently only works with MapReduce as execution engine (P1)
+..* Currently only supports Hive Primitive types, essentially missing Array Type for Phoenix (P0)
+..* Currently very limited predicate pushdown will get better in next version (P0)
 
 ### Usage
 ============
