@@ -95,12 +95,16 @@ Select code,description from phoenix_table
 Select count(*) from phoenix_table
 Select id,count(*) from phoenix_table group by id
 ```
-##### Joining Phoenix data and other Hive data
+##### Joining Phoenix and Hive data
 ```SQL
 select * from phoenix_table pt,sample_07 s where pt.code=s.code
 select pt.id,s.code,pt.salary,s.salary from phoenix_table pt,sample_07 s where pt.code=s.code and s.salary>33000;
 ```
-
+##### Joining 2 phoenix tables
+```SQL
+select * from phoenix_table pt,sample_07 s where pt.code=s.code
+select pt.id,s.code,pt.salary,s.salary from phoenix_table pt,phoenix_sample ps s where pt.code=ps.code and ps.salary>33000;
+```
 ### Compile
 ============
 To compile the project 
