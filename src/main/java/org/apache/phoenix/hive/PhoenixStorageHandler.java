@@ -96,6 +96,9 @@ public class PhoenixStorageHandler extends DefaultStorageHandler implements
 
       //TODO this avoids any pushdown must revisit and extract meaningful parts
       jobProperties.put("phoenix.select.stmt", "select * from " + (String)jobProperties.get("phoenix.hbase.table.name"));
+      if(((String)jobProperties.get("phoenix.hbase.table.name")).contains("limit")==true){
+          
+      }
       LOG.debug("ConfigurationUtil.SELECT_STATEMENT " + (String)jobProperties.get("phoenix.select.stmt"));
     }
     
@@ -104,7 +107,7 @@ public class PhoenixStorageHandler extends DefaultStorageHandler implements
      */
     @Override
     public Class<? extends InputFormat> getInputFormatClass() {
-        return PhoenixInputFormat.class;
+        return HivePhoenixInputFormat.class;
     }
 
     /**
@@ -112,7 +115,8 @@ public class PhoenixStorageHandler extends DefaultStorageHandler implements
      */
     @Override
     public Class<? extends OutputFormat> getOutputFormatClass() {
-        return PhoenixOutputFormat.class;
+        return HivePhoenixOutputFormat.class;
+        //return PhoenixOutputFormat.class;
     }
 
     /**

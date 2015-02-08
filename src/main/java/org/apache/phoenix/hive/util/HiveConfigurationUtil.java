@@ -20,11 +20,14 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.phoenix.jdbc.PhoenixConnection;
+import org.apache.phoenix.mapreduce.util.PhoenixConfigurationUtil;
 import org.apache.phoenix.schema.PDataType;
+import org.apache.phoenix.util.PhoenixRuntime;
 
 import com.google.common.base.Preconditions;
 
@@ -42,7 +45,6 @@ public class HiveConfigurationUtil {
     public static final String ZOOKEEPER_PORT_DEFAULT = "2181";
     public static final String ZOOKEEPER_PARENT_DEFAULT = "/hbase-unsecure";
 
-    public static final String UPSERT_BATCH_SIZE = "phoenix.upsert.batch.size";
     public static final String COLUMN_MAPPING = "phoenix.column.mapping";
     public static final String AUTOCREATE = "autocreate";
     public static final String AUTODROP = "autodrop";
@@ -50,33 +52,38 @@ public class HiveConfigurationUtil {
     public static final String PHOENIX_ROWKEYS = "phoenix.rowkeys";
     public static final String SALT_BUCKETS = "saltbuckets";
     public static final String COMPRESSION = "compression";
+    public static final String VERSIONS = "versions";
+    public static final int VERSIONS_NUM = 5;
     public static final String SPLIT = "split";
-    public static final long DEFAULT_UPSERT_BATCH_SIZE = 1000;
     public static final String REDUCE_SPECULATIVE_EXEC =
             "mapred.reduce.tasks.speculative.execution";
     public static final String MAP_SPECULATIVE_EXEC = "mapred.map.tasks.speculative.execution";
 
     public static void setProperties(Properties tblProps, Map<String, String> jobProperties) {
-        LOG.debug("quorum:" + tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_QUORUM));
-        LOG.debug("port:" + tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PORT));
-        LOG.debug("parent:" + tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PARENT));
+        String quorum = tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_QUORUM)!= null ?tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_QUORUM):HiveConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT;
+        String znode = tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PARENT)!= null ?tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PARENT):HiveConfigurationUtil.ZOOKEEPER_PARENT_DEFAULT;
+        String port = tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PORT)!= null ?tblProps.getProperty(HiveConfigurationUtil.ZOOKEEPER_PORT):HiveConfigurationUtil.ZOOKEEPER_PORT_DEFAULT;
+        if (!znode.startsWith("/")) {
+            znode = "/" + znode;
+        }
+        LOG.debug("quorum:" + quorum);
+        LOG.debug("port:" + port);
+        LOG.debug("parent:" +znode);
         LOG.debug("table:" + tblProps.getProperty(HiveConfigurationUtil.TABLE_NAME));
-        LOG.debug("batch:" + tblProps.getProperty(HiveConfigurationUtil.UPSERT_BATCH_SIZE));
+        LOG.debug("batch:" + tblProps.getProperty(PhoenixConfigurationUtil.UPSERT_BATCH_SIZE));
+        
         jobProperties
-                .put(HiveConfigurationUtil.ZOOKEEPER_QUORUM, tblProps.getProperty(
-                    HiveConfigurationUtil.ZOOKEEPER_QUORUM,
-                    HiveConfigurationUtil.ZOOKEEPER_QUORUM_DEFAULT));
-        jobProperties.put(HiveConfigurationUtil.ZOOKEEPER_PORT, tblProps.getProperty(
-            HiveConfigurationUtil.ZOOKEEPER_PORT, HiveConfigurationUtil.ZOOKEEPER_PORT_DEFAULT));
+                .put(HiveConfigurationUtil.ZOOKEEPER_QUORUM, quorum);
+        jobProperties.put(HiveConfigurationUtil.ZOOKEEPER_PORT, port);
         jobProperties
-                .put(HiveConfigurationUtil.ZOOKEEPER_PARENT, tblProps.getProperty(
-                    HiveConfigurationUtil.ZOOKEEPER_PARENT,
-                    HiveConfigurationUtil.ZOOKEEPER_PARENT_DEFAULT));
+                .put(HiveConfigurationUtil.ZOOKEEPER_PARENT, znode);
         String tableName = tblProps.getProperty(HiveConfigurationUtil.TABLE_NAME);
         if (tableName == null) {
             tableName = tblProps.get("name").toString();
             tableName = tableName.split(".")[1];
         }
+     // TODO this is synch with common Phoenix mechanism revisit to make wiser decisions
+        jobProperties.put(HConstants.ZOOKEEPER_QUORUM,quorum+PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR+port+ PhoenixRuntime.JDBC_PROTOCOL_SEPARATOR+znode);
         jobProperties.put(HiveConfigurationUtil.TABLE_NAME, tableName);
         // TODO this is synch with common Phoenix mechanism revisit to make wiser decisions
         jobProperties.put(PhoenixConfigurationUtil.OUTPUT_TABLE_NAME, tableName);

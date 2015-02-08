@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.phoenix.hive;
 
 import java.util.ArrayList;
@@ -32,7 +49,14 @@ public class PhoenixSerde implements SerDe {
     private int fieldCount;
     private List<Object> row;
     private List<ObjectInspector> fieldOIs;
-
+    
+    
+    /**
+     * This method initializes the Hive SerDe
+     * incoming hive types.
+     * @param Configuration conf job configuration
+     *  @param Properties table properties
+     */
     public void initialize(Configuration conf, Properties tblProps) throws SerDeException {
         if (conf != null) {
             conf.setClass("phoenix.input.class", PhoenixHiveDBWritable.class, DBWritable.class);
@@ -57,6 +81,13 @@ public class PhoenixSerde implements SerDe {
                     this.fieldOIs);
         this.row = new ArrayList(this.columnNames.size());
     }
+    
+    
+    /**
+     * This Deserializes a result from Phoenix to a Hive result
+     * @param Writable the phoenix writable Object here PhoenixHiveDBWritable
+     * @return  Object for Hive
+     */
 
     public Object deserialize(Writable wr) throws SerDeException {
         if (!(wr instanceof PhoenixHiveDBWritable)) throw new SerDeException(
@@ -87,10 +118,23 @@ public class PhoenixSerde implements SerDe {
         return null;
     }
 
+    /**
+     * This is a getter for the  serialized class to use with this SerDE
+     * @return  The class PhoenixHiveDBWritable
+     */
+    
     public Class<? extends Writable> getSerializedClass() {
         return PhoenixHiveDBWritable.class;
     }
 
+    
+    /**
+     * This serializes a Hive row to a Phoenix entry
+     * incoming hive types.
+     * @param Object Hive row
+     * @param ObjectInspector inspector for the Hive row
+     */
+    
     public Writable serialize(Object row, ObjectInspector inspector) throws SerDeException {
         final StructObjectInspector structInspector = (StructObjectInspector) inspector;
         final List<? extends StructField> fields = structInspector.getAllStructFieldRefs();

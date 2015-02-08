@@ -63,6 +63,8 @@ From: 'an unknown organization'
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
   - Hamcrest Core (https://github.com/hamcrest/JavaHamcrest/hamcrest-core) org.hamcrest:hamcrest-core:jar:1.3
     License: New BSD License  (http://www.opensource.org/licenses/bsd-license.php)
+  - snappy (http://github.com/dain/snappy) org.iq80.snappy:snappy:jar:0.3
+    License: Apache License 2.0  (http://www.apache.org/licenses/LICENSE-2.0.html)
   - XZ for Java (http://tukaani.org/xz/java.html) org.tukaani:xz:jar:1.0
     License: Public Domain 
   - oro  oro:oro:jar:2.0.8
@@ -105,7 +107,7 @@ From: 'Apache Software Foundation' (http://www.apache.org)
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
   - hadoop-yarn-common  org.apache.hadoop:hadoop-yarn-common:jar:2.2.0
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
-  - Phoenix Core (http://www.apache.org/phoenix/phoenix-core/) org.apache.phoenix:phoenix-core:jar:4.2.0
+  - Phoenix Core (http://www.apache.org/phoenix/phoenix-core/) org.apache.phoenix:phoenix-core:jar:4.2.2
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 From: 'Apache Software Foundation' (http://www.apache.org/)
@@ -149,8 +151,8 @@ From: 'JolBox' (http://jolbox.com)
     License: Apache v2  (http://www.apache.org/licenses/LICENSE-2.0.html)
 
 From: 'JUnit' (http://www.junit.org)
-  - JUnit (http://junit.org) junit:junit:jar:4.11
-    License: Common Public License Version 1.0  (http://www.opensource.org/licenses/cpl1.0.txt)
+  - JUnit (http://junit.org) junit:junit:jar:4.12-beta-3
+    License: Eclipse Public License 1.0  (http://www.eclipse.org/legal/epl-v10.html)
 
 From: 'Mort Bay Consulting' (http://www.mortbay.com)
   - Jetty Server (http://www.eclipse.org/jetty/jetty-parent/project/modules/jetty) org.mortbay.jetty:jetty:jar:6.1.26
@@ -313,7 +315,7 @@ From: 'The Netty Project' (http://netty.io/)
     License: Apache License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
 
 From: 'xerial.org' (http://www.xerial.org/)
-  - Snappy for Java (http://github.com/xerial/snappy-java/) org.xerial.snappy:snappy-java:bundle:1.1.0.1
+  - Snappy for Java (http://github.com/xerial/snappy-java/) org.xerial.snappy:snappy-java:bundle:1.0.5
     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 
