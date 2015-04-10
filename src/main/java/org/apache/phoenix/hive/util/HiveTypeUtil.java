@@ -11,14 +11,23 @@
  */
 package org.apache.phoenix.hive.util;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.hive.common.type.HiveChar;
+import org.apache.hadoop.hive.common.type.HiveVarchar;
 import org.apache.hadoop.hive.serde2.SerDeException;
+import org.apache.hadoop.hive.serde2.io.DateWritable;
+import org.apache.hadoop.hive.serde2.io.DoubleWritable;
+import org.apache.hadoop.hive.serde2.io.HiveCharWritable;
+import org.apache.hadoop.hive.serde2.io.HiveVarcharWritable;
+import org.apache.hadoop.hive.serde2.io.ShortWritable;
+import org.apache.hadoop.hive.serde2.io.TimestampWritable;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.io.BooleanWritable;
-import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -73,6 +82,8 @@ public class HiveTypeUtil {
         final String lctype = hiveType.toLowerCase();
         if ("string".equals(lctype)) {
             return PDataType.VARCHAR;
+        } else if ("varchar".equals(lctype)) {
+            return PDataType.VARCHAR;
         } else if ("float".equals(lctype)) {
             return PDataType.FLOAT;
         } else if ("double".equals(lctype)) {
@@ -106,18 +117,20 @@ public class HiveTypeUtil {
      */
     // TODO awkward logic revisit
     public static Writable SQLType2Writable(String hiveType, Object o) throws SerDeException {
-        String lctype = hiveType.toLowerCase();
+	String lctype = hiveType.toLowerCase();
         if ("string".equals(lctype)) return new Text(o.toString());
+        if ("varchar".equals(lctype)) return new HiveVarcharWritable(new HiveVarchar(o.toString(),o.toString().length()));
+        if ("char".equals(lctype)) return new HiveCharWritable(new HiveChar(o.toString(),o.toString().length()));
         if ("float".equals(lctype)) return new FloatWritable(((Float) o).floatValue());
         if ("double".equals(lctype)) return new DoubleWritable(((Double) o).doubleValue());
         if ("boolean".equals(lctype)) return new BooleanWritable(((Boolean) o).booleanValue());
-        if ("tinyint".equals(lctype)) return new IntWritable(((Integer) o).intValue());
-        if ("smallint".equals(lctype)) return new IntWritable(((Integer) o).intValue());
+        if ("tinyint".equals(lctype)) return new ShortWritable(((Integer) o).shortValue());
+        if ("smallint".equals(lctype)) return new ShortWritable(((Integer) o).shortValue());
         if ("int".equals(lctype)) return new IntWritable(((Integer) o).intValue());
         if ("bigint".equals(lctype)) return new LongWritable(((Long) o).longValue());
-        if ("timestamp".equals(lctype)) return new Text(o.toString());
+        if ("timestamp".equals(lctype)) return new TimestampWritable((Timestamp)o);
         if ("binary".equals(lctype)) return new Text(o.toString());
-        if ("date".equals(lctype)) return new Text(o.toString());
+        if ("date".equals(lctype)) return new DateWritable(new Date((long) o));
         if ("array".equals(lctype))
         ;
         throw new SerDeException("Phoenix unrecognized column type: " + hiveType);
